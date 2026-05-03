@@ -1,0 +1,8 @@
+﻿# Local OS / editor cruft
+Thumbs.db
+.DS_Store
+*.tmp
+_*.tmp
+
+# Original scrapes (reference only — not part of the site)
+_scrape_*.html
