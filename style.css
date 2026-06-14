@@ -121,7 +121,7 @@
   .vbs-btn { display: inline-block; background: var(--sage); color: white; padding: 11px 24px; border-radius: 8px; font-size: 13px; font-weight: 600; text-decoration: none; }
 
   /* CELEBRATION CALLOUT (name change event) */
-  .headline { background: var(--sky-light); padding: 64px 56px; display: grid; grid-template-columns: 1fr 380px; gap: 56px; align-items: center; }
+  .headline { background: var(--sky-light); padding: 64px 56px; display: grid; grid-template-columns: 1fr 380px; gap: 56px; align-items: center; border-bottom: 2px solid var(--sky-mid); }
   .headline-text .section-title { margin-bottom: 16px; }
   .headline-text .section-body { margin-bottom: 24px; }
   .headline-poster { display: block; line-height: 0; border-radius: 12px; overflow: hidden; box-shadow: 0 12px 32px rgba(26,58,92,0.18); transition: transform 0.2s, box-shadow 0.2s; }
@@ -291,8 +291,8 @@
   /* PHOTO BANNER (3-photo strip) */
   .past-events { padding: 0; background: var(--off-white); }
   .photo-banner { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px; }
-  .photo-banner img { width: 100%; height: 280px; object-fit: cover; display: block; }
-  .photo-banner img:nth-child(2) { object-position: top; }
+  .photo-banner img { width: 100%; height: 280px; object-fit: cover; display: block; object-position: center; }
+  .photo-banner img:nth-child(2) { object-position: top !important; }
   @media (max-width: 720px) { .photo-banner { grid-template-columns: 1fr; gap: 2px; } .photo-banner img { height: 220px; } }
 
   /* GALLERY (masonry, no cropping) */
