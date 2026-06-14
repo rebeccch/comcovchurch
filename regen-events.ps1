@@ -56,7 +56,7 @@ function CardHtml($row) {
 function HeadlineHtml($row) {
     $images = @()
     if ($row.images) {
-        $images = $row.images.Split('|') | Where-Object { $_.Trim() -ne '' }
+        $images = @($row.images.Split('|') | Where-Object { $_.Trim() -ne '' })
     }
     $posterHtml = ''
     if ($images.Count -eq 1) {
