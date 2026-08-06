@@ -306,6 +306,14 @@
   .recurring-grid { grid-template-columns: repeat(3, 1fr); }
   @media (max-width: 720px) { .recurring-grid { grid-template-columns: 1fr; } }
 
+  /* HORIZONTAL SCROLL for the full upcoming events list on events.html */
+  .events-scroll-hint { font-size: 13px; color: var(--muted); margin: 0 0 16px; font-style: italic; }
+  .events-grid-scroll { display: flex !important; grid-template-columns: none; overflow-x: auto; gap: 16px; padding: 4px 4px 20px; scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch; scrollbar-color: var(--sky) var(--sky-light); }
+  .events-grid-scroll::-webkit-scrollbar { height: 10px; }
+  .events-grid-scroll::-webkit-scrollbar-track { background: var(--sky-light); border-radius: 5px; }
+  .events-grid-scroll::-webkit-scrollbar-thumb { background: var(--sky); border-radius: 5px; }
+  .events-grid-scroll .event-card { flex: 0 0 260px; scroll-snap-align: start; }
+
   /* SERVICES PAGE */
   .service-card { display: grid; grid-template-columns: 1fr auto; gap: 24px; align-items: center; background: var(--off-white); border: 1px solid var(--border); border-radius: 12px; padding: 22px 26px; margin-top: 18px; }
   .service-card:first-of-type { margin-top: 24px; }

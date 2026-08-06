@@ -1,7 +1,7 @@
 # regen-events.ps1 — reads events.csv and rebuilds upcoming-event cards and headline banners
 # Usage:  powershell -ExecutionPolicy Bypass -File .\regen-events.ps1
 
-param([int]$MaxUpcoming = 4)
+param([int]$MaxHome = 4)
 
 $root = $PSScriptRoot
 $csvPath = Join-Path $root 'events.csv'
@@ -9,15 +9,15 @@ $indexPath = Join-Path $root 'index.html'
 $eventsPath = Join-Path $root 'events.html'
 
 $today = [int](Get-Date -Format 'yyyyMMdd')
-Write-Host "regen-events: today=$today, max=$MaxUpcoming"
+Write-Host "regen-events: today=$today, home shows next $MaxHome, events page shows all"
 
 $rows = Import-Csv $csvPath
-$upcoming = $rows |
+$upcomingAll = @($rows |
     Where-Object { [int]$_.sort_date -ge $today } |
-    Sort-Object { [int]$_.sort_date } |
-    Select-Object -First $MaxUpcoming
+    Sort-Object { [int]$_.sort_date })
+$upcomingHome = @($upcomingAll | Select-Object -First $MaxHome)
 
-Write-Host "  showing $($upcoming.Count) event(s)"
+Write-Host "  home: $($upcomingHome.Count) event(s); events page: $($upcomingAll.Count) event(s)"
 
 $palette = @{
     'sage' = @{ bg='#d4edda'; text='#2a6e40'; featured=$false }
@@ -79,32 +79,39 @@ function HeadlineHtml($row) {
     return ($out -join "`n")
 }
 
-$cardsList = @()
-$headlinesList = @()
-foreach ($e in $upcoming) {
-    $cardsList += CardHtml $e
-    if ($e.featured -eq 'yes') {
-        $headlinesList += HeadlineHtml $e
+function Build-Blocks($rows) {
+    $cardsList = @()
+    $headlinesList = @()
+    foreach ($e in $rows) {
+        $cardsList += CardHtml $e
+        if ($e.featured -eq 'yes') { $headlinesList += HeadlineHtml $e }
+    }
+    return @{
+        cards = ($cardsList -join "`n")
+        headlines = ($headlinesList -join "`n`n")
     }
 }
-$cards = $cardsList -join "`n"
-$headlines = $headlinesList -join "`n`n"
 
-Write-Host "  generated $($cardsList.Count) card(s), $($headlinesList.Count) banner(s)"
+$homeBlocks = Build-Blocks $upcomingHome
+$allBlocks  = Build-Blocks $upcomingAll
 
 $upcomingPattern  = '(?s)<!-- EVENTS:UPCOMING:START -->.*?<!-- EVENTS:UPCOMING:END -->'
 $headlinesPattern = '(?s)<!-- EVENTS:HEADLINES:START -->.*?<!-- EVENTS:HEADLINES:END -->'
-$upcomingReplacement  = "<!-- EVENTS:UPCOMING:START -->`n$cards`n<!-- EVENTS:UPCOMING:END -->"
-$headlinesReplacement = "<!-- EVENTS:HEADLINES:START -->`n$headlines`n<!-- EVENTS:HEADLINES:END -->"
 
-foreach ($file in @($indexPath, $eventsPath)) {
-    $c = [IO.File]::ReadAllText($file, [System.Text.UTF8Encoding]::new($false))
+$fileTargets = @(
+    @{ path = $indexPath;  cards = $homeBlocks.cards; headlines = $homeBlocks.headlines }
+    @{ path = $eventsPath; cards = $allBlocks.cards;  headlines = $allBlocks.headlines  }
+)
+
+foreach ($t in $fileTargets) {
+    $c = [IO.File]::ReadAllText($t.path, [System.Text.UTF8Encoding]::new($false))
+    $upcomingReplacement  = "<!-- EVENTS:UPCOMING:START -->`n" + $t.cards + "`n<!-- EVENTS:UPCOMING:END -->"
+    $headlinesReplacement = "<!-- EVENTS:HEADLINES:START -->`n" + $t.headlines + "`n<!-- EVENTS:HEADLINES:END -->"
     $c = [regex]::Replace($c, $upcomingPattern,  $upcomingReplacement)
     $c = [regex]::Replace($c, $headlinesPattern, $headlinesReplacement)
-    # Normalize to CRLF for Windows
     $c = $c -replace "`r`n", "`n" -replace "`n", "`r`n"
-    [IO.File]::WriteAllText($file, $c, [System.Text.UTF8Encoding]::new($false))
-    Write-Host "  wrote: $(Split-Path $file -Leaf)"
+    [IO.File]::WriteAllText($t.path, $c, [System.Text.UTF8Encoding]::new($false))
+    Write-Host "  wrote: $(Split-Path $t.path -Leaf)"
 }
 
 # Update Last Updated date on every HTML page
