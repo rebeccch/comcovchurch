@@ -334,3 +334,6 @@
     .service-card { grid-template-columns: 1fr; }
     .service-cal { justify-content: flex-start; }
   }
+  /* GIVE PAGE */
+  .give-widget { margin: 32px 0; min-height: 100px; }
+  .give-address { background: var(--off-white); border-left: 4px solid var(--sky); padding: 14px 18px; border-radius: 6px; font-style: normal; line-height: 1.7; }
