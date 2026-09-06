@@ -1,7 +1,7 @@
 # regen-events.ps1 — reads events.csv and rebuilds upcoming-event cards and headline banners
 # Usage:  powershell -ExecutionPolicy Bypass -File .\regen-events.ps1
 
-param([int]$MaxHome = 4)
+param([int]$MaxHome = 4, [int]$MaxEvents = 3)
 
 $root = $PSScriptRoot
 $csvPath = Join-Path $root 'events.csv'
@@ -16,8 +16,9 @@ $upcomingAll = @($rows |
     Where-Object { [int]$_.sort_date -ge $today } |
     Sort-Object { [int]$_.sort_date })
 $upcomingHome = @($upcomingAll | Select-Object -First $MaxHome)
+$upcomingEvents = @($upcomingAll | Select-Object -First $MaxEvents)
 
-Write-Host "  home: $($upcomingHome.Count) event(s); events page: $($upcomingAll.Count) event(s)"
+Write-Host "  home: $($upcomingHome.Count) event(s); events page: $($upcomingEvents.Count) event(s)"
 
 $palette = @{
     'sage' = @{ bg='#d4edda'; text='#2a6e40'; featured=$false }
@@ -92,15 +93,15 @@ function Build-Blocks($rows) {
     }
 }
 
-$homeBlocks = Build-Blocks $upcomingHome
-$allBlocks  = Build-Blocks $upcomingAll
+$homeBlocks   = Build-Blocks $upcomingHome
+$eventsBlocks = Build-Blocks $upcomingEvents
 
 $upcomingPattern  = '(?s)<!-- EVENTS:UPCOMING:START -->.*?<!-- EVENTS:UPCOMING:END -->'
 $headlinesPattern = '(?s)<!-- EVENTS:HEADLINES:START -->.*?<!-- EVENTS:HEADLINES:END -->'
 
 $fileTargets = @(
-    @{ path = $indexPath;  cards = $homeBlocks.cards; headlines = $homeBlocks.headlines }
-    @{ path = $eventsPath; cards = $allBlocks.cards;  headlines = $allBlocks.headlines  }
+    @{ path = $indexPath;  cards = $homeBlocks.cards;   headlines = $homeBlocks.headlines   }
+    @{ path = $eventsPath; cards = $eventsBlocks.cards; headlines = $eventsBlocks.headlines }
 )
 
 foreach ($t in $fileTargets) {

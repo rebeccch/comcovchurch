@@ -275,7 +275,9 @@
 
   /* PRIOR EVENTS (thank-you cards with photo grid) */
   .prior-events { padding: 64px 56px; background: var(--off-white); }
+  .prior-events-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; max-width: 1200px; margin: 24px auto 0; }
   .prior-event-card { background: var(--white); border: 1px solid var(--border); border-radius: 16px; overflow: hidden; max-width: 980px; margin: 24px auto 0; display: grid; grid-template-columns: 1fr 1.4fr; }
+  .prior-events-grid .prior-event-card { grid-template-columns: 1fr; max-width: none; margin: 0; }
   .prior-event-info { padding: 32px 36px; display: flex; flex-direction: column; justify-content: center; }
   .prior-event-date { font-size: 11px; font-weight: 700; color: var(--sky); text-transform: uppercase; letter-spacing: 0.12em; margin-bottom: 10px; }
   .prior-event-name { font-family: 'Lora', serif; font-size: 24px; font-weight: 500; color: var(--sky-dark); margin: 0 0 14px; line-height: 1.25; }
@@ -285,6 +287,7 @@
   @media (max-width: 820px) {
     .prior-events { padding: 48px 24px; }
     .prior-event-card { grid-template-columns: 1fr; }
+    .prior-events-grid { grid-template-columns: 1fr; }
     .prior-event-gallery img { min-height: 200px; }
   }
 
@@ -304,15 +307,20 @@
 
   /* RECURRING EVENTS GRID */
   .recurring-grid { grid-template-columns: repeat(3, 1fr); }
+  .recurring-grid .event-color-bar { height: 48px; }
+  .recurring-grid .event-color-bar span { font-size: 16px; font-weight: 600; letter-spacing: 0.02em; }
+  .recurring-grid .event-time { font-family: 'Lora', serif; font-size: 18px; font-weight: 500; color: var(--sky-dark); line-height: 1.4; margin-top: 10px; }
+  .recurring-grid .event-note { font-size: 12px; color: var(--muted); line-height: 1.5; margin-top: 8px; }
   @media (max-width: 720px) { .recurring-grid { grid-template-columns: 1fr; } }
 
-  /* HORIZONTAL SCROLL for the full upcoming events list on events.html */
-  .events-scroll-hint { font-size: 13px; color: var(--muted); margin: 0 0 16px; font-style: italic; }
-  .events-grid-scroll { display: flex !important; grid-template-columns: none; overflow-x: auto; gap: 16px; padding: 4px 4px 20px; scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch; scrollbar-color: var(--sky) var(--sky-light); }
-  .events-grid-scroll::-webkit-scrollbar { height: 10px; }
-  .events-grid-scroll::-webkit-scrollbar-track { background: var(--sky-light); border-radius: 5px; }
-  .events-grid-scroll::-webkit-scrollbar-thumb { background: var(--sky); border-radius: 5px; }
-  .events-grid-scroll .event-card { flex: 0 0 260px; scroll-snap-align: start; }
+  /* FEATURED UPCOMING EVENTS GRID (3-col) */
+  .events-grid-featured { grid-template-columns: repeat(3, 1fr); }
+  @media (max-width: 720px) { .events-grid-featured { grid-template-columns: 1fr; } }
+
+  /* FULL CALENDAR EMBED */
+  .calendar-embed { width: 100%; margin: 0 auto; }
+  .calendar-embed iframe { display: block; width: 100%; height: 600px; border: 0; border-radius: 8px; box-shadow: 0 4px 14px rgba(26,58,92,0.08); }
+  @media (max-width: 720px) { .calendar-embed iframe { height: 500px; } }
 
   /* SERVICES PAGE */
   .service-card { display: grid; grid-template-columns: 1fr auto; gap: 24px; align-items: center; background: var(--off-white); border: 1px solid var(--border); border-radius: 12px; padding: 22px 26px; margin-top: 18px; }
