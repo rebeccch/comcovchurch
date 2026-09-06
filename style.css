@@ -45,8 +45,8 @@
   .nav-dropdown-menu a { display: block; padding: 9px 18px; font-size: 13px; color: var(--text); text-decoration: none; white-space: nowrap; }
   .nav-dropdown-menu a:hover { background: var(--sky-light); color: var(--sky-dark); }
   .nav-links a:hover { color: var(--sky); }
-  .nav-cta { background: var(--sky); color: #ffffff; padding: 10px 22px; border-radius: 8px; font-size: 13px; font-weight: 600; text-decoration: none; transition: background 0.2s; }
-  .nav-cta:hover { background: var(--sky-dark); color: #ffffff; }
+  .nav-links a.nav-cta { background: var(--sky); color: #ffffff; padding: 8px 18px; border-radius: 8px; font-size: 13px; font-weight: 600; text-decoration: none; transition: background 0.2s, color 0.2s; }
+  .nav-links a.nav-cta:hover { background: var(--sky-dark); color: #ffffff; }
 
   /* HERO: magazine split */
   .hero { display: grid; grid-template-columns: 1.4fr 1fr; min-height: 440px; }
